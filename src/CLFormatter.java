@@ -1,31 +1,12 @@
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import sep.tinee.net.channel.ClientChannel;
-import sep.tinee.net.message.Message;
 
 /**
  * A helper class for the current prototype {@link Client client}.  <i>E.g.</i>,
  * for formatting Command Line messages.
  */
 public class CLFormatter {
-
-  static ClientChannel chan;  // Client-side channel for talking to a Tinee server
-
-  CLFormatter(String host, int port) {
-    this.chan = new ClientChannel(host, port);
-  }
-
-  /* Interact with Tinee server */
-
-  private void send(Message msg) throws IOException {
-    this.chan.send(msg);
-  }
-
-  private Message receive() throws IOException, ClassNotFoundException {
-    return this.chan.receive();
-  }
 
   /* Following are the auxiliary methods for formatting the UI text */
 

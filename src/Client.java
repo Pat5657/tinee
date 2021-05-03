@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import sep.tinee.net.channel.ClientChannel;
 import sep.tinee.net.message.Bye;
 import sep.tinee.net.message.Push;
 import sep.tinee.net.message.ReadReply;
@@ -71,28 +72,49 @@ import sep.tinee.net.message.ReadRequest;
  */
 public class Client {
 
-  String user;
-  String host;
-  int port;
-
+  private String user;
+  private String host;
+  private int port;
+  private ClientChannel chan;  // Client-side channel for talking to a Tinee server
+  private List<String> draftLines = new LinkedList<>();
+  private State state;
+  private String draftTag;
   boolean printSplash = true;
 
-  Client() {
+  enum State {
+    Main,
+    Drafting
+  }
+  
+  public Client(String user, String host, int port) {
+    this.user = user;
+    this.host = host;
+    this.port = port;
+    this.chan = new ClientChannel(host, port);
   }
 
   public static void main(String[] args) throws IOException {
     String user = args[0];
     String host = args[1];
     int port = Integer.parseInt(args[2]);
-    Client client = new Client();
-    client.set(user, host, port);
+    Client client = new Client(user, host, port);
     client.run();
   }
-
-  public void set(String user, String host, int port) {
-    this.user = user;
-    this.host = host;
-    this.port = port;
+  
+  public ClientChannel getChan() {
+    return this.chan;
+  }
+  
+  public void addDraftLine(String lines) {
+    this.draftLines.add(lines);
+  }
+  
+  public void setState(State s) {
+    this.state = s;
+  }
+  
+  public void setDraftTag(String tag) {
+    this.draftTag = tag;
   }
 
   // Run the client
@@ -100,9 +122,8 @@ public class Client {
       value = "DM_DEFAULT_ENCODING",
       justification = "When reading console, ignore 'default encoding' warning")
   void run() throws IOException {
-
+    
     BufferedReader reader = null;
-    CLFormatter helper = null;
     try {
       reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -110,45 +131,48 @@ public class Client {
         System.err.println("User/host has not been set.");
         System.exit(1);
       }
-      helper = new CLFormatter(this.host, this.port);
 
-      if (this.printSplash = true);
-      {
-        System.out.print(helper.formatSplash(this.user));
+      if (this.printSplash = true) {
+        System.out.print(CLFormatter.formatSplash(this.user));
       }
-      loop(helper, reader);
-    } catch (Exception ex) {
+      loop(reader);
+    } catch (IOException | ClassNotFoundException ex) {
       throw new RuntimeException(ex);
     } finally {
-      reader.close();
-      if (helper.chan.isOpen()) {
+      if (reader != null) {
+        reader.close();
+      }
+      if (this.chan.isOpen()) {
         // If the channel is open, send Bye and close
-        helper.chan.send(new Bye());
-        helper.chan.close();
+        this.chan.send(new Bye());
+        this.chan.close();
       }
     }
   }
 
 // Main loop: print user options, read user input and process
-  void loop(CLFormatter helper, BufferedReader reader) throws IOException,
+  void loop(BufferedReader reader) throws IOException,
       ClassNotFoundException {
 
     // The app is in one of two states: "Main" or "Drafting"
-    String state = "Main";  // Initial state
+    this.state = State.Main;
 
     // Holds the current draft data when in the "Drafting" state
-    String draftTag = null;
-    List<String> draftLines = new LinkedList<>();
-
+    this.draftTag = null;
+    
+    // Define command
+    Command command;
+    
     // The loop
     for (boolean done = false; !done;) {
-
+      // Clear command
+      command = null;
+      
       // Print user options
-      if (state.equals("Main")) {
-        System.out.print(helper.formatMainMenuPrompt());
+      if (this.state == State.Main) {
+        System.out.print(CLFormatter.formatMainMenuPrompt());
       } else {  // state = "Drafting"
-        System.out.print(helper.
-            formatDraftingMenuPrompt(draftTag, draftLines));
+        System.out.print(CLFormatter.formatDraftingMenuPrompt(this.draftTag, this.draftLines));
       }
 
       // Read a line of user input
@@ -168,39 +192,34 @@ public class Client {
         // exit command applies in either state
         done = true;
       } // "Main" state commands
-      else if (state.equals("Main")) {
+      else if (this.state == State.Main) {
         if ("manage".startsWith(cmd)) {
           // Switch to "Drafting" state and start a new "draft"
-          state = "Drafting";
-          draftTag = rawArgs[0];
+          command = new ManageCommand(this, rawArgs[0]);
         } else if ("read".startsWith(cmd)) {
           // Read tines on server
-          helper.chan.send(new ReadRequest(rawArgs[0]));
-          ReadReply rep = (ReadReply) helper.chan.receive();
-          System.out.print(
-              helper.formatRead(rawArgs[0], rep.users, rep.lines));
+          command = new ReadCommand(this, rawArgs);
         } else {
           System.out.println("Could not parse command/args.");
         }
       } // "Drafting" state commands
-      else if (state.equals("Drafting")) {
+      else if (this.state == State.Drafting) {
         if ("line".startsWith(cmd)) {
           // Add a tine message line
-          String line = Arrays.stream(rawArgs).
-              collect(Collectors.joining());
-          draftLines.add(line);
+          command = new LineCommand(this, rawArgs);
         } else if ("push".startsWith(cmd)) {
           // Send drafted tines to the server, and go back to "Main" state
-          helper.chan.send(new Push(user, draftTag, draftLines));
-          state = "Main";
-          draftTag = null;
+          command = new PushCommand(this, user, draftTag, this.draftLines);
         } else {
           System.out.println("Could not parse command/args.");
         }
       } else {
         System.out.println("Could not parse command/args.");
       }
+      // Execute the command if it has been set.
+      if (command != null) {
+        command.execute();
+      }
     }
-    return;
   }
 }
