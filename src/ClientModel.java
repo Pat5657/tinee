@@ -34,12 +34,12 @@ public class ClientModel extends AbstractModel {
     Drafting
   }
     
-  public ClientModel(String user, String host, int port) {
+  public ClientModel(String user, String host, int port, Locale locale) {
     this.user = user;
     this.host = host;
     this.port = port;
     this.chan = new ClientChannel(host, port);
-    this.strings = ResourceBundle.getBundle(RESOURCE_PATH, new Locale("en", "GB"));
+    this.strings = ResourceBundle.getBundle(RESOURCE_PATH, locale);
     this.clf = new CLFormatter(this.strings);
   }
   
