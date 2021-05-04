@@ -1,40 +1,34 @@
 
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * A helper class for the current prototype {@link Client client}.  <i>E.g.</i>,
  * for formatting Command Line messages.
  */
 public class CLFormatter {
+  
+  private ResourceBundle strings;
+  
+  public CLFormatter(ResourceBundle strings) {
+    this.strings = strings;
+  }
 
   /* Following are the auxiliary methods for formatting the UI text */
 
-  static String formatSplash(String user) {
-    return "\nHello " + user + "!\n"
-        + "Note:  Commands can be abbreviated to any prefix, "
-        + "e.g., read [mytag] => re [mytag]\n";
+  public String formatSplash(String user) {
+    return MessageFormat.format(this.strings.getString("splash"), user);
   }
 
-  static String formatMainMenuPrompt() {
-    return "\n[Main] Enter command: "
-        + "read [mytag], "
-        + "manage [mytag], "
-        + "show, "
-        + "exit"
-        + "\n> ";
+  public String formatMainMenuPrompt() {
+    return this.strings.getString("main_menu_options");
   }
 
-  static String formatDraftingMenuPrompt(String tag, List<String> lines) {
-    return "\nDrafting: " + formatDrafting(tag, lines)
-        + "\n[Drafting] Enter command: "
-        + "line [mytext], "
-        + "push, "
-        + "discard, "
-        + "close, "
-        + "exit"
-        + "\n> ";
+  public String formatDraftingMenuPrompt(String tag, List<String> lines) {
+    return MessageFormat.format(this.strings.getString("drafting_menu_options"), formatDrafting(tag, lines));
   }
 
   static String formatDrafting(String tag, List<String> lines) {
@@ -50,9 +44,9 @@ public class CLFormatter {
     return b.toString();
   }
 
-  static String formatRead(String tag, List<String> users,
+  public String formatRead(String tag, List<String> users,
       List<String> read) {
-    StringBuilder b = new StringBuilder("Read: #");
+    StringBuilder b = new StringBuilder(this.strings.getString("read") + ": #");
     b.append(tag);
     Iterator<String> it = read.iterator();
     for (String user : users) {
@@ -65,8 +59,8 @@ public class CLFormatter {
     return b.toString();
   }
   
-  static String formatShow(Map<String, String> show) {
-    StringBuilder b = new StringBuilder("Show:");
+  public String formatShow(Map<String, String> show) {
+    StringBuilder b = new StringBuilder(this.strings.getString("show") + ":");
     for (String tag : show.keySet()) {
       b.append("\n");
       b.append(String.format("%12s", tag));

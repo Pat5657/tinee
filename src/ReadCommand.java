@@ -45,7 +45,7 @@ public class ReadCommand implements Command {
   @Override
   public String getStringResponse() {
     if (this.error.isEmpty()) {
-      return CLFormatter.formatRead(this.args[0], this.response.users, this.response.lines);
+      return this.model.getClf().formatRead(this.args[0], this.response.users, this.response.lines);
     } else {
       return this.error;
     }
