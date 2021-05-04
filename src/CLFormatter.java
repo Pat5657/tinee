@@ -1,6 +1,7 @@
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A helper class for the current prototype {@link Client client}.  <i>E.g.</i>,
@@ -20,6 +21,7 @@ public class CLFormatter {
     return "\n[Main] Enter command: "
         + "read [mytag], "
         + "manage [mytag], "
+        + "show, "
         + "exit"
         + "\n> ";
   }
@@ -57,6 +59,18 @@ public class CLFormatter {
       b.append(String.format("%12s", user));
       b.append("  ");
       b.append(it.next());
+    };
+    b.append("\n");
+    return b.toString();
+  }
+  
+  static String formatShow(Map<String, String> show) {
+    StringBuilder b = new StringBuilder("Show:");
+    for (String tag : show.keySet()) {
+      b.append("\n");
+      b.append(String.format("%12s", tag));
+      b.append("  ");
+      b.append(show.get(tag));
     };
     b.append("\n");
     return b.toString();
