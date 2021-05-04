@@ -1,4 +1,5 @@
 
+import java.io.IOException;
 import sep.tinee.net.message.ReadReply;
 import sep.tinee.net.message.ReadRequest;
 
@@ -14,21 +15,31 @@ import sep.tinee.net.message.ReadRequest;
  */
 public class ReadCommand implements Command {
 
-  private Client client;
-  private String tag;
+  private final ClientModel model;
+  private final String[] args;
   
-  public ReadCommand(Client client, String[] args) {
-    this.client = client;
-    this.tag = args[0];
+  public ReadCommand(ClientModel model, String[] args) {
+    this.model = model;
+    this.args = args;
   }
   
   @Override
   public void execute() {
     try {
-      this.client.getChan().send(new ReadRequest(this.tag));
-      ReadReply rep = (ReadReply) this.client.getChan().receive();
-      System.out.print(CLFormatter.formatRead(this.tag, rep.users, rep.lines));
-    } catch (Exception e) {
+      // Validate arguments
+      if (this.args.length != 0) {
+        // Define tag
+        String tag = this.args[0];
+        // Send Read request
+        this.model.getChan().send(new ReadRequest(tag));
+        // Get response from server
+        ReadReply rep = (ReadReply) this.model.getChan().receive();
+        // Output response
+        System.out.print(CLFormatter.formatRead(tag, rep.users, rep.lines));
+      } else {
+        System.out.println("Tag is missing.");
+      }
+    } catch (IOException | ClassNotFoundException e) {
       System.out.println(e.getMessage());
     }
   }

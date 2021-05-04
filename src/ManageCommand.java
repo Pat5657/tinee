@@ -10,18 +10,25 @@
  */
 public class ManageCommand implements Command {
 
-  private Client client;
-  private String tag;
+  private final ClientModel model;
+  private final String[] args;
   
-  public ManageCommand(Client client, String tag) {
-    this.client = client;
-    this.tag = tag;
+  public ManageCommand(ClientModel model, String[] args) {
+    this.model = model;
+    this.args = args;
   }
   
   @Override
   public void execute() {
-    this.client.setState(Client.State.Drafting);
-    this.client.setDraftTag(this.tag);
+    // Validate args
+    if (args.length != 0) {
+      // Set Drafting state
+      this.model.setState(ClientModel.State.Drafting);
+      // Set tag
+      this.model.setDraftTag(this.args[0]);
+    } else {
+      System.out.println("Tag is missing.");
+    }
   }
   
 }
