@@ -123,6 +123,9 @@ public class CommandLineView extends AbstractView {
       case "read":
         // Read tines on server
         return new ReadCommand(this.model, rawArgs);
+      case "show":
+        // Show tags and authers on server
+        return new ShowCommand(this.model);
       default:
         // Command not valid
         this.printInvalidCommand();
