@@ -9,5 +9,6 @@
  * @author Patry
  */
 public interface Command {
-  void execute();
+  public void execute();
+  public String getStringResponse();
 }

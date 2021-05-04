@@ -1,6 +1,6 @@
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Arrays;
 import sep.tinee.net.message.Push;
 
 /*
@@ -13,31 +13,32 @@ import sep.tinee.net.message.Push;
  *
  * @author Patry
  */
-public class PushCommand implements Command {
-  
+public class CloseCommand implements Command {
+
   private ClientModel model;
   private String error = "";
   
-  public PushCommand(ClientModel model) {
+  public CloseCommand(ClientModel model) {
     this.model = model;
   }
-
+  
   @Override
   public void execute() {
     try {
-      // If user provided drafter lines. 
-      if (!this.model.getDraftLines().isEmpty()) {
-        // Send Push request
-        this.model.getChan().send(new Push(this.model.getUser(), this.model.getDraftTag(), this.model.getDraftLines()));
-        // Clear draft lines
-        this.model.clearDraftLines();
-      }
+      this.model.getChan().send(
+        // Send close Push request
+        new Push(
+          this.model.getUser(), 
+          this.model.getDraftTag(), 
+          Arrays.asList(Push.CLOSE_LINE)
+        )
+      );
       // Set Main state
       this.model.setState(ClientModel.State.Main);
       // Clear draft tag
       this.model.setDraftTag(null);
-    } catch (IOException ex) {
-      this.error = ex.getMessage();
+    } catch (IOException e) {
+      this.error = e.getMessage();
     }
   }
 
@@ -48,6 +49,5 @@ public class PushCommand implements Command {
     }
     return "";
   }
-  
   
 }

@@ -10,18 +10,23 @@
  */
 public class LineCommand implements Command {
 
-  public Client client;
+  public ClientModel model;
   public String[] args;
   
-  public LineCommand(Client client, String[] args) {
-    this.client = client;
+  public LineCommand(ClientModel model, String[] args) {
+    this.model = model;
     this.args = args;
   }
   
   @Override
   public void execute() {
     String line = String.join(" ", this.args);
-    this.client.addDraftLine(line);
+    this.model.addDraftLine(line);
+  }
+
+  @Override
+  public String getStringResponse() {
+    return "";
   }
   
 }
