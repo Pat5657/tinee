@@ -1,6 +1,8 @@
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import sep.mvc.AbstractModel;
 import sep.tinee.net.channel.ClientChannel;
 
@@ -23,18 +25,26 @@ public class ClientModel extends AbstractModel {
   private String draftTag = null;
   private boolean printSplash = true;
   private ClientChannel chan;  // Client-side channel for talking to a Tinee server
-
+  private static final String RESOURCE_PATH = "resources/Client";
+  private final ResourceBundle strings;
+  private CLFormatter clf;
   
   public enum State {
     Main,
     Drafting
   }
     
-  public ClientModel(String user, String host, int port) {
+  public ClientModel(String user, String host, int port, Locale locale) {
     this.user = user;
     this.host = host;
     this.port = port;
     this.chan = new ClientChannel(host, port);
+    this.strings = ResourceBundle.getBundle(RESOURCE_PATH, locale);
+    this.clf = new CLFormatter(this.strings);
+  }
+  
+  public CLFormatter getClf() {
+    return this.clf;
   }
   
   public String getUser() {
@@ -84,4 +94,8 @@ public class ClientModel extends AbstractModel {
   public void clearDraftLines() {
     this.draftLines.clear();
   }
+  
+  public ResourceBundle getStrings() {
+    return this.strings;
   }
+}

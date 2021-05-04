@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import sep.mvc.AbstractView;
 
@@ -43,7 +41,7 @@ public class CommandLineView extends AbstractView {
       reader = new BufferedReader(new InputStreamReader(System.in));
       // Validate user and host
       if (this.model.getUser().isEmpty() || this.model.getHost().isEmpty()) {
-        System.err.println("User/host has not been set.");
+        System.err.println(this.model.getStrings().getString("user_host_not_set"));
         System.exit(1);
       }
       // Print splash screen
@@ -66,7 +64,7 @@ public class CommandLineView extends AbstractView {
   private void printSplash() {
     // If splash screen is enabled
     if (this.model.getPrintSplash() == true) {
-      System.out.print(CLFormatter.formatSplash(this.model.getUser()));
+      System.out.print(this.model.getClf().formatSplash(this.model.getUser()));
     }
   }
   
@@ -83,7 +81,7 @@ public class CommandLineView extends AbstractView {
       // Read a line of user input
       String raw = reader.readLine();
       if (raw == null) {
-        throw new IOException("Input stream closed while reading.");
+        throw new IOException(this.model.getStrings().getString("stream_closed"));
       }
       // Trim leading/trailing white space, and split words according to spaces
       List<String> split = Arrays.stream(raw.trim().split("\\ "))
@@ -94,7 +92,7 @@ public class CommandLineView extends AbstractView {
       String[] rawArgs = split.toArray(new String[split.size()]);
       
       // Process user input
-      if ("exit".equals(cmd)) {
+      if (this.model.getStrings().getString("exit_cmd").equals(cmd)) {
         // exit command applies in either state
         done = true;
         // Shutdown application
@@ -106,7 +104,7 @@ public class CommandLineView extends AbstractView {
         // Drafting state commands
         command = this.handleDraftingState(cmd, rawArgs);
       } else {
-        System.out.println("Could not parse command/args.");
+        this.printInvalidCommand();
       }
       // Execute the command if it has been set.
       if (command != null) {
@@ -119,53 +117,52 @@ public class CommandLineView extends AbstractView {
     }
   
   private Command handleMainState(String cmd, String[] rawArgs) {
-    switch (cmd) {
-      case "manage":
-        // Switch to "Drafting" state and start a new "draft"
-        return new ManageCommand(this.model, rawArgs);
-      case "read":
-        // Read tines on server
-        return new ReadCommand(this.model, rawArgs);
-      case "show":
-        // Show tags and authers on server
-        return new ShowCommand(this.model);
-      default:
-        // Command not valid
-        this.printInvalidCommand();
-        return null;
-    }
+    // Switch to "Drafting" state and start a new "draft"
+    if (cmd.equals(this.model.getStrings().getString("manage_cmd"))) {
+      return new ManageCommand(this.model, rawArgs);
+    } // Read tines on server
+    else if (cmd.equals(this.model.getStrings().getString("read_cmd"))) {
+      return new ReadCommand(this.model, rawArgs);
+    } // Show tags and authers on server
+    else if (cmd.equals(this.model.getStrings().getString("show_cmd"))) {
+      return new ShowCommand(this.model);
+    } 
+    // Command not valid
+    this.printInvalidCommand();
+    return null;
   }
   
   private Command handleDraftingState(String cmd, String[] rawArgs) {
-    switch (cmd) {
-      case "line":
-        // Add a tine message line
-        return new LineCommand(this.model, rawArgs);
-      case "push":
-        // Send drafted tines to the server, and go back to "Main" state
-        return new PushCommand(this.model);
-      case "close":
-        // Close ticket if user is auther
-        return new CloseCommand(this.model);
-      case "discard":
-        // Discard all drafted tines
-        return new DiscardCommand(this.model);
-      default:
-        // Command not valid
-        this.printInvalidCommand();
-        return null;
+    // Add a tine message line
+    if (cmd.equals(this.model.getStrings().getString("line_cmd"))) {
+      return new LineCommand(this.model, rawArgs);
+    } // Send drafted tines to the server, and go back to "Main" state
+    else if (cmd.equals(this.model.getStrings().getString("push_cmd"))) {
+      return new PushCommand(this.model);
+    } // Close ticket if user is auther
+    else if (cmd.equals(this.model.getStrings().getString("close_cmd"))) {
+      return new CloseCommand(this.model);
+    } // Discard all drafted tines
+    else if (cmd.equals(this.model.getStrings().getString("discard_cmd"))) {
+      return new DiscardCommand(this.model);
     }
+    // Command not valid
+    this.printInvalidCommand();
+    return null;
   }
   
+  /**
+   * Prints out "invalid command or arguments" message.
+   */
   private void printInvalidCommand() {
-    System.out.println("Could not parse command/args.");
+    System.out.println(this.model.getStrings().getString("invalid_command"));
   }
   
   private void printOptions() {
     if (this.model.getState() == ClientModel.State.Main) {
-      System.out.print(CLFormatter.formatMainMenuPrompt());
+      System.out.print(this.model.getClf().formatMainMenuPrompt());
     } else {  // state = "Drafting"
-      System.out.print(CLFormatter.formatDraftingMenuPrompt(this.model.getDraftTag(), this.model.getDraftLines()));
+      System.out.print(this.model.getClf().formatDraftingMenuPrompt(this.model.getDraftTag(), this.model.getDraftLines()));
     }
   }
 }

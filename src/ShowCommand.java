@@ -38,7 +38,7 @@ public class ShowCommand implements Command {
   @Override
   public String getStringResponse() {
     if (this.error.isEmpty()) {
-      return CLFormatter.formatShow(this.response.tags);
+      return this.model.getClf().formatShow(this.response.tags);
     } else {
       return this.error;
     }

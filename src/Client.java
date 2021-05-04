@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import sep.tinee.net.channel.ClientChannel;
 import sep.tinee.net.message.Bye;
@@ -78,7 +79,7 @@ public class Client {
     int port = Integer.parseInt(args[2]);
     // Define client controller
     ClientController cc = new ClientController(
-      new ClientModel(user, host, port),
+      new ClientModel(user, host, port, new Locale("en", "GB")),
       new CommandLineView()
     );
     // Start the application
