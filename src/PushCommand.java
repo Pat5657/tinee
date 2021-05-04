@@ -16,6 +16,7 @@ import sep.tinee.net.message.Push;
 public class PushCommand implements Command {
   
   private ClientModel model;
+  private String error = "";
   
   public PushCommand(ClientModel model) {
     this.model = model;
@@ -36,8 +37,16 @@ public class PushCommand implements Command {
       // Clear draft tag
       this.model.setDraftTag(null);
     } catch (IOException ex) {
-//      Logger.getLogger(PushCommand.class.getName()).log(Level.SEVERE, null, ex);
+      this.error = ex.getMessage();
     }
+  }
+
+  @Override
+  public String getStringResponse() {
+    if (!this.error.isEmpty()) {
+      return this.error;
+    }
+    return "";
   }
   
   

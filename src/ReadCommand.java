@@ -17,6 +17,8 @@ public class ReadCommand implements Command {
 
   private final ClientModel model;
   private final String[] args;
+  private ReadReply response;
+  private String error = "";
   
   public ReadCommand(ClientModel model, String[] args) {
     this.model = model;
@@ -28,19 +30,24 @@ public class ReadCommand implements Command {
     try {
       // Validate arguments
       if (this.args.length != 0) {
-        // Define tag
-        String tag = this.args[0];
         // Send Read request
-        this.model.getChan().send(new ReadRequest(tag));
+        this.model.getChan().send(new ReadRequest(this.args[0]));
         // Get response from server
-        ReadReply rep = (ReadReply) this.model.getChan().receive();
-        // Output response
-        System.out.print(CLFormatter.formatRead(tag, rep.users, rep.lines));
+        this.response = (ReadReply) this.model.getChan().receive();
       } else {
-        System.out.println("Tag is missing.");
+        this.error = "Tag is missing.";
       }
     } catch (IOException | ClassNotFoundException e) {
-      System.out.println(e.getMessage());
+      this.error = e.getMessage();
+    }
+  }
+
+  @Override
+  public String getStringResponse() {
+    if (this.error.isEmpty()) {
+      return CLFormatter.formatRead(this.args[0], this.response.users, this.response.lines);
+    } else {
+      return this.error;
     }
   }
   

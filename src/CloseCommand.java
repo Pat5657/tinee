@@ -16,6 +16,7 @@ import sep.tinee.net.message.Push;
 public class CloseCommand implements Command {
 
   private ClientModel model;
+  private String error = "";
   
   public CloseCommand(ClientModel model) {
     this.model = model;
@@ -37,8 +38,16 @@ public class CloseCommand implements Command {
       // Clear draft tag
       this.model.setDraftTag(null);
     } catch (IOException e) {
-      System.err.println(e.getMessage());
+      this.error = e.getMessage();
     }
+  }
+
+  @Override
+  public String getStringResponse() {
+    if (!this.error.isEmpty()) {
+      return this.error;
+    }
+    return "";
   }
   
 }

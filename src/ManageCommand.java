@@ -12,6 +12,7 @@ public class ManageCommand implements Command {
 
   private final ClientModel model;
   private final String[] args;
+  private String error = "";
   
   public ManageCommand(ClientModel model, String[] args) {
     this.model = model;
@@ -27,8 +28,16 @@ public class ManageCommand implements Command {
       // Set tag
       this.model.setDraftTag(this.args[0]);
     } else {
-      System.out.println("Tag is missing.");
+      this.error = "Tag is missing.";
     }
+  }
+
+  @Override
+  public String getStringResponse() {
+    if (!this.error.isEmpty()) {
+      return this.error;
+    }
+    return "";
   }
   
 }

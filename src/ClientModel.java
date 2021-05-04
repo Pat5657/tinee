@@ -84,4 +84,4 @@ public class ClientModel extends AbstractModel {
   public void clearDraftLines() {
     this.draftLines.clear();
   }
-}
+  }

@@ -16,6 +16,8 @@ import sep.tinee.net.message.ShowRequest;
 public class ShowCommand implements Command {
 
   private ClientModel model;
+  private ShowReply response;
+  private String error = "";
   
   public ShowCommand(ClientModel model) {
     this.model = model;
@@ -27,11 +29,18 @@ public class ShowCommand implements Command {
       // Send Show request
       this.model.getChan().send(new ShowRequest());
       // Get show reply
-      ShowReply rep = (ShowReply) this.model.getChan().receive();
-      // Output
-      System.out.println(CLFormatter.formatShow(rep.tags));
+      this.response = (ShowReply) this.model.getChan().receive();
     } catch (IOException | ClassNotFoundException e) {
-      System.out.println(e.getMessage());
+      this.error = e.getMessage();
+  }
+  }
+
+  @Override
+  public String getStringResponse() {
+    if (this.error.isEmpty()) {
+      return CLFormatter.formatShow(this.response.tags);
+    } else {
+      return this.error;
     }
   }
   

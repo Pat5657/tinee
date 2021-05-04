@@ -94,7 +94,7 @@ public class CommandLineView extends AbstractView {
       String[] rawArgs = split.toArray(new String[split.size()]);
       
       // Process user input
-      if ("exit".startsWith(cmd)) {
+      if ("exit".equals(cmd)) {
         // exit command applies in either state
         done = true;
         // Shutdown application
@@ -111,9 +111,12 @@ public class CommandLineView extends AbstractView {
       // Execute the command if it has been set.
       if (command != null) {
         command.execute();
+        if (!command.getStringResponse().isEmpty()) {
+          System.out.println(command.getStringResponse());
+        }
+      }
       }
     }
-  }
   
   private Command handleMainState(String cmd, String[] rawArgs) {
     switch (cmd) {

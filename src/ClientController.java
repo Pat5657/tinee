@@ -1,7 +1,5 @@
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import sep.mvc.AbstractController;
 import sep.mvc.AbstractModel;
 import sep.mvc.AbstractView;
@@ -33,7 +31,7 @@ public class ClientController extends AbstractController {
       // Start the view
       this.getView().run();
     } catch (IOException ex) {
-      System.err.println(ex.getMessage()); // TODO: output message in view
+      System.err.println(ex.getMessage());
     }
   }
 
@@ -50,8 +48,8 @@ public class ClientController extends AbstractController {
         cc.send(new Bye());
         cc.close();
       } catch (IOException ex) {
-        System.err.println(ex.getMessage()); // TODO: output message in view
+        System.err.println(ex.getMessage());
       }
     }
-  }    
+  }
 }

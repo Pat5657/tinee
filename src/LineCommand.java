@@ -23,5 +23,10 @@ public class LineCommand implements Command {
     String line = String.join(" ", this.args);
     this.model.addDraftLine(line);
   }
+
+  @Override
+  public String getStringResponse() {
+    return "";
+  }
   
 }
