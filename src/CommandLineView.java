@@ -138,6 +138,9 @@ public class CommandLineView extends AbstractView {
       case "push":
         // Send drafted tines to the server, and go back to "Main" state
         return new PushCommand(this.model);
+      case "close":
+        // Close ticket if user is auther
+        return new CloseCommand(this.model);
       default:
         // Command not valid
         this.printInvalidCommand();
