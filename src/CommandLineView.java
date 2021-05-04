@@ -147,6 +147,9 @@ public class CommandLineView extends AbstractView {
       case "close":
         // Close ticket if user is auther
         return new CloseCommand(this.model);
+      case "discard":
+        // Discard all drafted tines
+        return new DiscardCommand(this.model);
       default:
         // Command not valid
         this.printInvalidCommand();

@@ -31,6 +31,7 @@ public class CLFormatter {
         + "\n[Drafting] Enter command: "
         + "line [mytext], "
         + "push, "
+        + "discard, "
         + "close, "
         + "exit"
         + "\n> ";
