@@ -42,7 +42,7 @@ public class CommandLineView extends AbstractView {
       // Validate user and host
       if (this.model.getUser().isEmpty() || this.model.getHost().isEmpty()) {
         System.err.println(this.model.getStrings().getString("user_host_not_set"));
-        System.exit(1);
+        this.getController().shutdown();
       }
       // Print splash screen
       this.printSplash();
