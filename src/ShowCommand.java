@@ -32,7 +32,7 @@ public class ShowCommand implements Command {
       this.response = (ShowReply) this.model.getChan().receive();
     } catch (IOException | ClassNotFoundException e) {
       this.error = e.getMessage();
-  }
+    }
   }
 
   @Override

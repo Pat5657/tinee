@@ -72,17 +72,29 @@ import sep.tinee.net.message.ReadRequest;
  * @see CLFormatter
  */
 public class Client {
+  
+  private ClientController controller;
 
+  public Client(String user, String host, int port, Locale locale) {
+    // Define client controller
+    this.controller = new ClientController(
+      new ClientModel(user, host, port, locale),
+      new CommandLineView()
+    );
+  }
+  
   public static void main(String[] args) throws IOException {
     String user = args[0];
     String host = args[1];
     int port = Integer.parseInt(args[2]);
-    // Define client controller
-    ClientController cc = new ClientController(
-      new ClientModel(user, host, port, new Locale("en", "GB")),
-      new CommandLineView()
-    );
+    // Define client
+    Client client = new Client(user, host, port, new Locale("en", "GB"));
     // Start the application
-    cc.run();
-  }  
+    client.run();
+  }
+  
+  public void run() {
+    // Start the application
+    this.controller.run();
+  }
 }

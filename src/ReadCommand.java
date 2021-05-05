@@ -35,7 +35,7 @@ public class ReadCommand implements Command {
         // Get response from server
         this.response = (ReadReply) this.model.getChan().receive();
       } else {
-        this.error = "Tag is missing.";
+        this.error = this.model.getStrings().getString("tag_missing");
       }
     } catch (IOException | ClassNotFoundException e) {
       this.error = e.getMessage();

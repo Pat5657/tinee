@@ -113,8 +113,8 @@ public class CommandLineView extends AbstractView {
           System.out.println(command.getStringResponse());
         }
       }
-      }
     }
+  }
   
   private Command handleMainState(String cmd, String[] rawArgs) {
     // Switch to "Drafting" state and start a new "draft"
