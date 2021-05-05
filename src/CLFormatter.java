@@ -11,8 +11,12 @@ import java.util.ResourceBundle;
  */
 public class CLFormatter {
   
-  private ResourceBundle strings;
+  private final ResourceBundle strings;
   
+  /**
+   * Constructor
+   * @param strings ResourceBundle localisation strings.
+   */
   public CLFormatter(ResourceBundle strings) {
     this.strings = strings;
   }

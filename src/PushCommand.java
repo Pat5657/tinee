@@ -10,12 +10,12 @@ import sep.tinee.net.message.Push;
  */
 
 /**
- *
- * @author Patry
+ * Pushes all, if any, drafted lines to the server.
+ * @author Patryk
  */
 public class PushCommand implements Command {
   
-  private ClientModel model;
+  private final ClientModel model;
   private String error = "";
   
   public PushCommand(ClientModel model) {

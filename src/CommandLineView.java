@@ -61,6 +61,9 @@ public class CommandLineView extends AbstractView {
     this.model = (ClientModel) this.getModel();
   }
 
+  /**
+   * Print the splash screen if splash screen is enabled.
+   */
   private void printSplash() {
     // If splash screen is enabled
     if (this.model.getPrintSplash() == true) {
@@ -68,6 +71,10 @@ public class CommandLineView extends AbstractView {
     }
   }
   
+  /**
+   * A loop which awaits and handles user input from the CLI.
+   * @throws IOException 
+   */
   private void loop() throws IOException {
     // Define command
     Command command;
@@ -113,9 +120,15 @@ public class CommandLineView extends AbstractView {
           System.out.println(command.getStringResponse());
         }
       }
-      }
     }
+  }
   
+  /**
+   * Handle user input from the main state menu.
+   * @param cmd String,       Command from user.
+   * @param rawArgs String[], Command arguments.
+   * @return Returns the appropriate command class.
+   */
   private Command handleMainState(String cmd, String[] rawArgs) {
     // Switch to "Drafting" state and start a new "draft"
     if (cmd.equals(this.model.getStrings().getString("manage_cmd"))) {
@@ -132,6 +145,12 @@ public class CommandLineView extends AbstractView {
     return null;
   }
   
+  /**
+   * Handle user input from the drafting state menu.
+   * @param cmd String,       Command from user.
+   * @param rawArgs String[], Command arguments.
+   * @return Returns the appropriate command class.
+   */
   private Command handleDraftingState(String cmd, String[] rawArgs) {
     // Add a tine message line
     if (cmd.equals(this.model.getStrings().getString("line_cmd"))) {
@@ -158,6 +177,9 @@ public class CommandLineView extends AbstractView {
     System.out.println(this.model.getStrings().getString("invalid_command"));
   }
   
+  /**
+   * Print the menu options based on the client state.
+   */
   private void printOptions() {
     if (this.model.getState() == ClientModel.State.Main) {
       System.out.print(this.model.getClf().formatMainMenuPrompt());

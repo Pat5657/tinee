@@ -10,12 +10,12 @@ import sep.tinee.net.message.ShowRequest;
  */
 
 /**
- *
- * @author Patry
+ * Fetches all tags and their author's.
+ * @author Patryk
  */
 public class ShowCommand implements Command {
 
-  private ClientModel model;
+  private final ClientModel model;
   private ShowReply response;
   private String error = "";
   
@@ -32,7 +32,7 @@ public class ShowCommand implements Command {
       this.response = (ShowReply) this.model.getChan().receive();
     } catch (IOException | ClassNotFoundException e) {
       this.error = e.getMessage();
-  }
+    }
   }
 
   @Override

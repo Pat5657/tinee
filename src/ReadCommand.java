@@ -10,8 +10,8 @@ import sep.tinee.net.message.ReadRequest;
  */
 
 /**
- *
- * @author Patry
+ * Read the tines of a specified tag from the server.
+ * @author Patryk
  */
 public class ReadCommand implements Command {
 
@@ -35,7 +35,7 @@ public class ReadCommand implements Command {
         // Get response from server
         this.response = (ReadReply) this.model.getChan().receive();
       } else {
-        this.error = "Tag is missing.";
+        this.error = this.model.getStrings().getString("tag_missing");
       }
     } catch (IOException | ClassNotFoundException e) {
       this.error = e.getMessage();

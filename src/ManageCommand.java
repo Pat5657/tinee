@@ -5,8 +5,8 @@
  */
 
 /**
- *
- * @author Patry
+ * Switches to draft state of a specified ticket tag.
+ * @author Patryk
  */
 public class ManageCommand implements Command {
 
@@ -28,7 +28,7 @@ public class ManageCommand implements Command {
       // Set tag
       this.model.setDraftTag(this.args[0]);
     } else {
-      this.error = "Tag is missing.";
+      this.error = this.model.getStrings().getString("tag_missing");
     }
   }
 
