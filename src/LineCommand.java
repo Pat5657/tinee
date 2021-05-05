@@ -5,8 +5,8 @@
  */
 
 /**
- *
- * @author Patry
+ * Enters a new line to the drafted list of lines.
+ * @author Patryk
  */
 public class LineCommand implements Command {
 

@@ -5,8 +5,8 @@
  */
 
 /**
- *
- * @author Patry
+ * Switches to draft state of a specified ticket tag.
+ * @author Patryk
  */
 public class ManageCommand implements Command {
 

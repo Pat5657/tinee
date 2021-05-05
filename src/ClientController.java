@@ -13,8 +13,8 @@ import sep.tinee.net.message.Bye;
  */
 
 /**
- *
- * @author Patry
+ * Client Controller for handling the client view and model.
+ * @author Patryk
  */
 public class ClientController extends AbstractController {
 
@@ -22,6 +22,10 @@ public class ClientController extends AbstractController {
     super(model, view);
   }
 
+  /**
+   * Initialise the view and set its model. 
+   * Start up the view.
+   */
   public void run() {
     // Initialise view
     this.getView().init();

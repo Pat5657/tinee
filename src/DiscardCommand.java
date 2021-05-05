@@ -5,12 +5,12 @@
  */
 
 /**
- *
- * @author Patry
+ * Discards currently drafted lines and returns to the Main state.
+ * @author Patryk
  */
 public class DiscardCommand implements Command {
 
-  private ClientModel model;
+  private final ClientModel model;
   
   public DiscardCommand(ClientModel model) {
     this.model = model;

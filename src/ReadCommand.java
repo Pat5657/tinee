@@ -10,8 +10,8 @@ import sep.tinee.net.message.ReadRequest;
  */
 
 /**
- *
- * @author Patry
+ * Read the tines of a specified tag from the server.
+ * @author Patryk
  */
 public class ReadCommand implements Command {
 

@@ -13,21 +13,24 @@ import sep.tinee.net.channel.ClientChannel;
  */
 
 /**
- *
- * @author Patry
+ * 
+ * @author Patryk
  */
 public class ClientModel extends AbstractModel {
-  private String user;
-  private String host;
-  private int port;
-  private List<String> draftLines = new LinkedList<>();
+  // Client settings
+  private final String user;
+  private final String host;
+  private final int port;
+  
+  private final List<String> draftLines;
   private State state = State.Main;
-  private String draftTag = null;
-  private boolean printSplash = true;
-  private ClientChannel chan;  // Client-side channel for talking to a Tinee server
+  private String draftTag = null; 
+  private final boolean printSplash;
+  private final ClientChannel chan;  // Client-side channel for talking to a Tinee server
+  private final CLFormatter clf;  // Helper for formatting of the Command line interface strings.
+  // Localisation
   private static final String RESOURCE_PATH = "resources/Client";
   private final ResourceBundle strings;
-  private CLFormatter clf;
   
   public enum State {
     Main,
@@ -35,6 +38,8 @@ public class ClientModel extends AbstractModel {
   }
     
   public ClientModel(String user, String host, int port, Locale locale) {
+    this.printSplash = true;
+    this.draftLines = new LinkedList<>();
     this.user = user;
     this.host = host;
     this.port = port;

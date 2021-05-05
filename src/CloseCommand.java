@@ -10,12 +10,13 @@ import sep.tinee.net.message.Push;
  */
 
 /**
- *
- * @author Patry
+ * Closes a ticket currently selected in the draft mode and returns to the
+ * Main state.
+ * @author Patryk
  */
 public class CloseCommand implements Command {
 
-  private ClientModel model;
+  private final ClientModel model;
   private String error = "";
   
   public CloseCommand(ClientModel model) {

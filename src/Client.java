@@ -1,18 +1,6 @@
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
-import sep.tinee.net.channel.ClientChannel;
-import sep.tinee.net.message.Bye;
-import sep.tinee.net.message.Push;
-import sep.tinee.net.message.ReadReply;
-import sep.tinee.net.message.ReadRequest;
 
 /**
  * This class is an initial work-in-progress prototype for a command line
@@ -73,8 +61,15 @@ import sep.tinee.net.message.ReadRequest;
  */
 public class Client {
   
-  private ClientController controller;
+  private final ClientController controller;
 
+  /**
+   * Constructor for the client.
+   * @param user,   User's name.
+   * @param host,   Host address of the server.
+   * @param port,   Server port number.
+   * @param locale, Locale to specify the internationalisation.
+   */
   public Client(String user, String host, int port, Locale locale) {
     // Define client controller
     this.controller = new ClientController(
