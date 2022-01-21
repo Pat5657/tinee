@@ -1,5 +1,6 @@
 # tinee
 University of Hertfordshire - Software Engineering Practice coursework project.
+Essentially a system from creating and managing tickets.
 
 ## Server startup from a CLI:
 ```
